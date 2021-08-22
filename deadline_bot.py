@@ -6,7 +6,7 @@
 Usage:
 > python deadline_bot.py --bot-token <bot_token> --chat-id <chat_id> --deadline-str <yyyy-mm-dd> --goal-pages <int>
 """
-import tempfile
+import os
 import requests
 import argparse
 import datetime
@@ -92,12 +92,12 @@ class Deadline():
         fig.canvas.draw()
         ax.set_ylim(0, ax.get_ylim()[1])
         fig.tight_layout()
-        tmp_file = tempfile.NamedTemporaryFile(suffix='.png')
+        tmp_file = 'temp_image.png'
         fig.savefig(tmp_file, format='png')
         return tmp_file
     
     def clean_up(self, tmp_file):
-        tmp_file.close()
+        os.remove(tmp_file)
              
 def construct_text_url(token, chat_id, msg):
     '''Create URL to send msg via Telegram API.'''
@@ -145,7 +145,7 @@ if __name__ == "__main__":
         
         # Graph
         tmp_file = deadline.create_image()
-        send_img(args.bot_token, args.chat_id, tmp_file.name)
+        send_img(args.bot_token, args.chat_id, tmp_file)
         deadline.clean_up(tmp_file)
         
         sleep_one_day()
