@@ -133,10 +133,10 @@ if __name__ == "__main__":
     parser.add_argument('--deadline-str', type=str, required=True)
     parser.add_argument('--goal-pages', type=int, required=True)
     args = parser.parse_args()
-    
-    deadline = Deadline(args.deadline_str, args.goal_pages)
-    
+     
     while True:
+        deadline = Deadline(args.deadline_str, args.goal_pages)
+
         # Text report
         url = construct_text_url(
             args.bot_token, args.chat_id, deadline.construct_message()
