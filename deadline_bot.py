@@ -47,7 +47,8 @@ class Deadline():
         current_date, days_gone, avg_pages_per_day = self.calc_progress()
         
         msg = f"Progress update for {current_date.strftime('%Y-%m-%d')}\n\n"
-        
+       
+        msg += f"Current pages: {self.current_pages}\n"
         msg += f"Days left: {days_left}\n"
         msg += f"Pages left: {pages_left}\n"
         msg += f"Avg pages per day to meet goal ({self.goal_pages}) by "\
