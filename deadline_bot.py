@@ -29,9 +29,16 @@ class Deadline():
     def calc_deadline(self):
         '''Calculate requirements to meet deadline.''' 
         days_left = (self.deadline - datetime.datetime.today()).days
+        weekdays_left = 0
+        curr_day = datetime.datetime.today()
+        while curr_day.date() != self.deadline.date():
+            if curr_day.weekday() < 6:
+                weekdays_left += 1
+            curr_day += datetime.timedelta(days=1)
         pages_left = self.goal_pages - self.current_pages
         avg_pages_per_day_left = pages_left / days_left
-        return days_left, pages_left, avg_pages_per_day_left
+        avg_pages_per_weekday_left = pages_left / weekdays_left
+        return days_left, weekdays_left, pages_left, avg_pages_per_day_left, avg_pages_per_weekday_left
     
     def calc_progress(self):
         '''Calculate progress towards goal.'''
@@ -45,17 +52,19 @@ class Deadline():
     
     def construct_message(self):
         '''Construct a message to summarise deadline progress.'''
-        days_left, pages_left, avg_pages_per_day_left = self.calc_deadline()
+        days_left, weekdays_left, pages_left, avg_pages_per_day_left, avg_pages_per_weekday_left = self.calc_deadline()
         current_date, days_gone, avg_pages_per_day = self.calc_progress()
         
         msg = f"Progress update for {current_date.strftime('%Y-%m-%d')}\n\n"
        
         msg += f"Current pages: {self.current_pages}\n"
-        msg += f"Days left: {days_left}\n"
         msg += f"Pages left: {pages_left}\n"
+        msg += f"Days left: {days_left}\n"
+        msg += f"Weekdays left: {weekdays_left}\n"
         msg += f"Avg pages per day to meet goal ({self.goal_pages}) by "\
                f"deadline ({self.deadline.strftime('%Y-%m-%d')}): "\
-               f"{avg_pages_per_day_left:.2f}\n\n"
+               f"{avg_pages_per_day_left:.2f}\n"
+        msg += f"Avg pages per weekday: {avg_pages_per_weekday_left:.2f}\n\n"
         
         msg += f"Days since started writing: {days_gone}\n"
         if avg_pages_per_day is not None:
