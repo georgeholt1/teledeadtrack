@@ -6,6 +6,8 @@
 Usage:
 > python deadline_bot.py --bot-token <bot_token> --chat-id <chat_id> --deadline-str <yyyy-mm-dd> --goal-pages <int>
 """
+import matplotlib
+matplotlib.use('Agg')
 import os
 import requests
 import argparse
@@ -25,11 +27,11 @@ class Deadline():
         self.current_pages = self.df.iloc[-1]['Pages']
     
     def calc_deadline(self):
-        '''Calculate requirements to meet deadline.'''
-        days_left = self.deadline - self.start_date
+        '''Calculate requirements to meet deadline.''' 
+        days_left = (self.deadline - datetime.datetime.today()).days
         pages_left = self.goal_pages - self.current_pages
-        avg_pages_per_day_left = pages_left / days_left.days
-        return days_left.days, pages_left, avg_pages_per_day_left
+        avg_pages_per_day_left = pages_left / days_left
+        return days_left, pages_left, avg_pages_per_day_left
     
     def calc_progress(self):
         '''Calculate progress towards goal.'''
